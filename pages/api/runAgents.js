@@ -1,20 +1,26 @@
 import { runGenerator } from '@/scripts/agentGenerator';
 import { runValidator } from '@/scripts/agentValidator';
+import { storeToStoracha } from '@/scripts/storageHelper';
 
 export default async function handler(req, res) {
   const { prompt } = req.body;
 
-  const synthetic = await runGenerator(prompt);
-  const validation = await runValidator(synthetic);
+  if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+
+  const generated = await runGenerator(prompt);
+  const validated = await runValidator(generated.data);
 
   const result = {
     prompt,
-    syntheticData: synthetic.data,
-    generatorLog: synthetic.cot,
-    score: validation.score,
-    validatorLog: validation.reasoning,
-    timestamp: Date.now(),
+    syntheticData: generated.data,
+    generatorCoT: generated.cot,
+    score: validated.score,
+    validatorCoT: validated.cot,
+    timestamp: generated.timestamp,
+    validatedAt: validated.validatedAt,
   };
 
-  res.status(200).json({ result });
+  const cid = await storeToStoracha(result); // <<— Upload to Storacha!
+
+  res.status(200).json({ ...result, cid });
 }
