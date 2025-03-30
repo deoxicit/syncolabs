@@ -1,26 +1,37 @@
 import { runGenerator } from '@/scripts/agentGenerator';
-import { runValidator } from '@/scripts/agentValidator';
-import { storeToStoracha } from '@/scripts/storageHelper';
+import { runValidatorFromCID } from '@/scripts/agentValidator';
+import { uploadAgentData } from '@/scripts/storageAgent';
 
 export default async function handler(req, res) {
   const { prompt } = req.body;
+  if (!prompt) return res.status(400).json({ error: 'Prompt required' });
 
-  if (!prompt) return res.status(400).json({ error: 'Prompt is required' });
+  const gen = await runGenerator(prompt);
 
-  const generated = await runGenerator(prompt);
-  const validated = await runValidator(generated.data);
+  const generatorCID = await uploadAgentData('generator', {
+    input: prompt,
+    output: gen.data,
+    cot: gen.cot,
+    metadata: `Model: GPT-3.5 | Timestamp: ${gen.timestamp}`
+  });
 
-  const result = {
+  const validatorOutput = await runValidatorFromCID(generatorCID);
+
+  const validatorCID = await uploadAgentData('validator', {
+    input: validatorOutput.input,
+    output: validatorOutput.output,
+    cot: validatorOutput.cot,
+    validation: validatorOutput.validatorCoT,
+    score: `${validatorOutput.score}`
+  });
+
+  res.status(200).json({
     prompt,
-    syntheticData: generated.data,
-    generatorCoT: generated.cot,
-    score: validated.score,
-    validatorCoT: validated.cot,
-    timestamp: generated.timestamp,
-    validatedAt: validated.validatedAt,
-  };
-
-  const cid = await storeToStoracha(result); // <<— Upload to Storacha!
-
-  res.status(200).json({ ...result, cid });
+    syntheticData: gen.data,
+    generatorCoT: gen.cot,
+    validatorCoT: validatorOutput.validatorCoT,
+    score: validatorOutput.score,
+    generatorCID,
+    validatorCID
+  });
 }
