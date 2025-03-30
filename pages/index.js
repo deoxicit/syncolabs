@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { PROMPT_TEMPLATES } from '@/utils/templates';
+import Link from 'next/link';
 
 export default function Home() {
   const [prompt, setPrompt] = useState('');
@@ -27,8 +28,19 @@ export default function Home() {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (result) {
+      const history = JSON.parse(localStorage.getItem('syncolab-runs') || '[]');
+      history.unshift({ ...result, timestamp: Date.now() });
+      localStorage.setItem('syncolab-runs', JSON.stringify(history.slice(0, 20))); // Keep last 20
+    }
+  }, [result]);
+
   return (
     <main className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 text-slate-800 p-8">
+      <Link href="/dashboard" className="text-sm text-blue-500 underline ml-4">📊 Dashboard</Link>
+      <Link href="/visualizer" className="text-sm text-blue-500 underline ml-4">🖼️ CID Viewer</Link>
+
       <div className="max-w-3xl mx-auto">
         <h1 className="text-4xl font-extrabold mb-6 text-center text-blue-600">🧪 SynCoLab</h1>
 
@@ -36,9 +48,8 @@ export default function Home() {
           {Object.keys(PROMPT_TEMPLATES).map((cat) => (
             <button
               key={cat}
-              className={`px-4 py-2 rounded-full text-sm font-semibold ${
-                category === cat ? 'bg-blue-700 text-white' : 'bg-blue-100 text-blue-700'
-              }`}
+              className={`px-4 py-2 rounded-full text-sm font-semibold ${category === cat ? 'bg-blue-700 text-white' : 'bg-blue-100 text-blue-700'
+                }`}
               onClick={() => handleCategorySelect(cat)}
             >
               {cat}
