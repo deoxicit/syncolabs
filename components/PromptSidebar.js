@@ -10,9 +10,8 @@ export default function PromptSidebar({ onSelect, isOpen, onClose }) {
 
   return (
     <div
-      className={`fixed top-0 left-0 h-full w-72 bg-white shadow-xl border-r transition-transform z-50 ${
-        isOpen ? 'translate-x-0' : '-translate-x-full'
-      }`}
+      className={`fixed top-0 left-0 h-full w-72 bg-white shadow-xl border-r transition-transform z-50 ${isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
     >
       <div className="p-4 border-b flex justify-between items-center">
         <h2 className="font-bold text-lg text-blue-600">🗂 Prompt History</h2>
@@ -29,7 +28,10 @@ export default function PromptSidebar({ onSelect, isOpen, onClose }) {
               onClick={() => onSelect(item.prompt)}
               className="w-full text-left text-sm bg-slate-100 hover:bg-blue-100 border border-slate-200 p-2 rounded"
             >
-              {item.prompt.length > 80 ? item.prompt.slice(0, 80) + '…' : item.prompt}
+              {item.prompt && item.prompt.length > 80
+                ? item.prompt.slice(0, 80) + '…'
+                : item.prompt || '⚠️ Missing prompt'}
+
             </button>
           ))
         )}
