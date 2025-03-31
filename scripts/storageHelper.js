@@ -1,5 +1,5 @@
 import { File } from 'web3.storage'
-import { getClient } from '@/utils/client';
+import { getClient } from '@/scripts/client';
 
 export async function storeToStoracha(result) {
   try {
