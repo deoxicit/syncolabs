@@ -37,7 +37,7 @@ export default function CIDVisualizer() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-slate-50 to-slate-100 text-slate-800 p-8">
+    <div className="min-h-screen text-slate-800 p-8">
       <h1 className="text-2xl font-bold mb-4">🖼️ CID Visualizer</h1>
       <input
         value={cid}

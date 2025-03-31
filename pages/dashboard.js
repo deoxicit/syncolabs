@@ -12,29 +12,11 @@ export default function Dashboard() {
         setRuns(localRuns);
     }, []);
 
-    async function handleUploadToStoracha() {
-        setUploading(true);
-        const content = JSON.stringify(runs, null, 2);
-        const cid = await uploadAgentData('generator', {
-            'runs.json': content
-        });
-        setRunsCID(cid);
-        setUploading(false);
-    }
-
     return (
         <div className="p-8 max-w-5xl mx-auto">
             <h1 className="text-3xl font-bold mb-6">📊 SynCoLab Run History</h1>
 
             <div className="mb-6">
-                <button
-                    onClick={handleUploadToStoracha}
-                    disabled={runs.length === 0 || uploading}
-                    className="bg-purple-600 text-white px-4 py-2 rounded"
-                >
-                    {uploading ? 'Uploading...' : '📤 Upload All Runs to Storacha'}
-                </button>
-
                 {runsCID && (
                     <p className="mt-2 text-sm">
                         ✅ Uploaded! View on IPFS:{' '}
