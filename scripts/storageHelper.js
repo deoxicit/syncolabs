@@ -1,13 +1,19 @@
 import { File } from 'web3.storage'
 import { create } from '@web3-storage/w3up-client'
 
-const client = await create();
+let client;
+async function getClient() {
+  if (!client) client = await create();
+  return client;
+}
+
 
 export async function storeToStoracha(result) {
   try {
     const json = JSON.stringify(result, null, 2);
     const blob = new Blob([json], { type: 'application/json' });
     const file = new File([blob], `syncolab-${Date.now()}.json`);
+    const client = await getClient();
 
     const cid = await client.uploadFile(file);
     return cid;

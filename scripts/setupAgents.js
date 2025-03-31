@@ -4,7 +4,12 @@ import fs from 'fs/promises';
 const configFile = './agentSpaces.json';
 
 async function main() {
-  const client = await create();
+  let client;
+  async function getClient() {
+    if (!client) client = await create();
+    return client;
+  }
+  
 
   const email = process.env.STORCHA_EMAIL;  
   const account = await client.login(email);

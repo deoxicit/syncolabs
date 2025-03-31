@@ -1,7 +1,5 @@
 import { create } from '@web3-storage/w3up-client';
-import fs from 'fs/promises';
 
-const client = await create();
 /**
  * Downloads files from a CID using the IPFS HTTP gateway
  * @param {string} cid - IPFS directory CID
