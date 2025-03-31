@@ -1,4 +1,4 @@
-import { getClient } from '../scripts/client';
+import { getClient } from '../scripts/client.js';
 import fs from 'fs/promises';
 
 const agentSpaces = JSON.parse(await fs.readFile(new URL('../agentSpaces.json', import.meta.url)));
