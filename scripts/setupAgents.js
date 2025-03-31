@@ -16,7 +16,6 @@ async function main() {
 
   const email = process.env.STORCHA_EMAIL;  
 
-
   const account = await client.login(email);
   await account.plan.wait();
 
