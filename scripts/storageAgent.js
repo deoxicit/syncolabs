@@ -1,15 +1,6 @@
 import { File } from 'web3.storage';
-import { create } from '@web3-storage/w3up-client';
 import agentSpaces from '../agentSpaces.json' assert { type: 'json' };
-
-let client;
-
-async function getClient() {
-  if (!client) {
-    client = await create();
-  }
-  return client;
-}
+import { getClient } from '@/utils/client';
 
 export async function uploadAgentData(agent, dataMap) {
   const client = await getClient();

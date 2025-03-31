@@ -1,12 +1,5 @@
 import { File } from 'web3.storage'
-import { create } from '@web3-storage/w3up-client'
-
-let client;
-async function getClient() {
-  if (!client) client = await create();
-  return client;
-}
-
+import { getClient } from '@/utils/client';
 
 export async function storeToStoracha(result) {
   try {

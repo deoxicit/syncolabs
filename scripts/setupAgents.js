@@ -1,13 +1,7 @@
-import { create } from '@web3-storage/w3up-client';
+import { getClient } from '@/utils/client';
 import fs from 'fs/promises';
 
 const agentSpaces = JSON.parse(await fs.readFile(new URL('../agentSpaces.json', import.meta.url)));
-
-let client;
-async function getClient() {
-  if (!client) client = await create();
-  return client;
-}
 
 async function main() {
   const client = await getClient();
